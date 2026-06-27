@@ -1,0 +1,21 @@
+GitHub Pages deployment notes for CSU Alumni VN
+
+Recommended GitHub account email:
+csualumnivn@gmail.com
+
+Recommended repository name:
+csualumnivn.github.io
+
+Upload the full contents of this folder to the repository root:
+- index.html
+- assets/
+- .nojekyll
+
+Then enable GitHub Pages:
+Repository Settings > Pages > Deploy from a branch > main branch > /root.
+
+Expected public URL if the GitHub username is csualumnivn:
+https://csualumnivn.github.io/
+
+Custom domain:
+No custom domain has been inserted because a final approved domain name was not provided. After CSU approval, add the final domain in GitHub Pages settings and create a CNAME file containing that domain only.
