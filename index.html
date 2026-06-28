@@ -549,6 +549,7 @@ const SITE_DATA = {
       "time": "Annual gathering",
       "category": "past",
       "location": "TP. Hồ Chí Minh",
+      "enLocation": "Ho Chi Minh City",
       "image": "assets/images/traditional-group.jpg",
       "viTitle": "CSU Alumni Traditional Day 2025",
       "enTitle": "CSU Alumni Traditional Day 2025",
@@ -560,6 +561,7 @@ const SITE_DATA = {
       "time": "Workshop",
       "category": "past",
       "location": "TP. Hồ Chí Minh",
+      "enLocation": "Ho Chi Minh City",
       "image": "assets/images/workshop3-room.jpg",
       "viTitle": "Workshop #3: Bán hàng Tư vấn – Consultative Selling",
       "enTitle": "Workshop #3: Consultative Selling",
@@ -571,6 +573,7 @@ const SITE_DATA = {
       "time": "13:30 – 16:30",
       "category": "past",
       "location": "Nhà hàng Khoái, 16 Lê Quý Đôn, Q.3, HCMC",
+      "enLocation": "Khoai Restaurant, 16 Le Quy Don St., District 3, HCMC",
       "image": "assets/images/workshop2-group.jpg",
       "viTitle": "Workshop #2: Building a Dream – My Start-up Story",
       "enTitle": "Workshop #2: Building a Dream – My Start-up Story",
@@ -582,6 +585,7 @@ const SITE_DATA = {
       "time": "09:00 – 11:00",
       "category": "past",
       "location": "Nhà hàng Khoái, 16 Lê Quý Đôn, Q.3, HCMC",
+      "enLocation": "Khoai Restaurant, 16 Le Quy Don St., District 3, HCMC",
       "image": "assets/images/workshop1-group.jpg",
       "viTitle": "Workshop #1: Layoff – Tạo động lực cho người ở lại, định hướng cho người ra đi",
       "enTitle": "Workshop #1: Layoff – Motivation and transition guidance",
@@ -867,7 +871,7 @@ function renderIndustryOptions(){const industries=[...new Set(DATA.members.map(m
 function renderMembers(){document.getElementById('memberSearch').placeholder=currentLang()==='en'?'Search by name, industry, cohort, skills...':'Tìm theo tên, ngành, cohort, kỹ năng...';const q=(document.getElementById('memberSearch').value||'').toLowerCase();const industry=document.getElementById('industryFilter').value;const type=document.getElementById('typeFilter').value;const list=DATA.members.filter(m=>{const hay=Object.values(m).join(' ').toLowerCase();return (!q||hay.includes(q))&&(industry==='all'||m.industry===industry)&&(type==='all'||m.type===type)});document.getElementById('memberGrid').innerHTML=list.length?list.map(m=>{const dn=currentLang()==='en'?(m.enName||m.name):m.name;const avatar=m.image?`<div class="avatar-photo"><img src="${escapeHtml(m.image)}" alt="${escapeHtml(dn)}" loading="lazy"></div>`:`<div class="avatar">${escapeHtml(m.initials||m.name.slice(0,2))}</div>`;return `<article class="member-card">${avatar}<span class="tag">${escapeHtml(m.type)}</span><h3>${escapeHtml(dn)}</h3><div class="muted">${escapeHtml(currentLang()==='en'?m.enRole:m.viRole)}</div><div class="member-meta"><span class="chip">${escapeHtml(m.program)}</span><span class="chip">${escapeHtml(m.cohort)}</span><span class="chip">${escapeHtml(m.industry)}</span><span class="chip">${escapeHtml(m.location)}</span></div><p>${escapeHtml(currentLang()==='en'?m.enBio:m.viBio)}</p></article>`}).join(''):`<div class="empty">${currentLang()==='en'?'No matching members yet.':'Chưa có thành viên phù hợp với bộ lọc.'}</div>`}
 function setEventTab(tab){eventTab=tab;document.querySelectorAll('[data-event-tab]').forEach(b=>b.classList.toggle('active',b.dataset.eventTab===tab));renderEvents()}
 function eventStatus(e){const today=new Date();today.setHours(0,0,0,0);const d=new Date(e.date+'T00:00:00');return d>=today?'upcoming':'past'}
-function renderEvents(){let list=DATA.events.map(e=>({...e,status:eventStatus(e)}));if(eventTab!=='all')list=list.filter(e=>e.status===eventTab);list.sort((a,b)=>new Date(a.date)-new Date(b.date));document.getElementById('eventsGrid').innerHTML=list.length?list.map(e=>{const d=new Date(e.date+'T00:00:00');const day=String(d.getDate()).padStart(2,'0');const month=d.toLocaleString(currentLang()==='en'?'en-US':'vi-VN',{month:'short',year:'numeric'});const diff=Math.ceil((d-new Date())/86400000);const cd=e.status==='upcoming'?(currentLang()==='en'?`Starts in ${Math.max(diff,0)} day(s)`: `Còn ${Math.max(diff,0)} ngày`):(currentLang()==='en'?'Completed':'Đã diễn ra');const img=e.image?`<img class="event-img" src="${escapeHtml(e.image)}" alt="${escapeHtml(currentLang()==='en'?e.enTitle:e.viTitle)}" loading="lazy">`:'';return `<article class="event-card">${img}<div class="datebox"><div class="day">${day}</div><div class="month">${escapeHtml(month)}</div></div><span class="tag">${escapeHtml(e.status)}</span><h3>${escapeHtml(currentLang()==='en'?e.enTitle:e.viTitle)}</h3><p>${escapeHtml(currentLang()==='en'?e.enDesc:e.viDesc)}</p><div class="event-meta">🕒 ${escapeHtml(e.time)}<br>📍 ${escapeHtml(e.location)}</div><button class="btn small" onclick='rsvp(${JSON.stringify(e.date)})'>RSVP</button><div class="countdown">${escapeHtml(cd)}</div></article>`}).join(''):`<div class="empty">${currentLang()==='en'?'No events in this category.':'Chưa có sự kiện trong nhóm này.'}</div>`}
+function renderEvents(){let list=DATA.events.map(e=>({...e,status:eventStatus(e)}));if(eventTab!=='all')list=list.filter(e=>e.status===eventTab);list.sort((a,b)=>new Date(a.date)-new Date(b.date));document.getElementById('eventsGrid').innerHTML=list.length?list.map(e=>{const d=new Date(e.date+'T00:00:00');const day=String(d.getDate()).padStart(2,'0');const month=d.toLocaleString(currentLang()==='en'?'en-US':'vi-VN',{month:'short',year:'numeric'});const diff=Math.ceil((d-new Date())/86400000);const cd=e.status==='upcoming'?(currentLang()==='en'?`Starts in ${Math.max(diff,0)} day(s)`: `Còn ${Math.max(diff,0)} ngày`):(currentLang()==='en'?'Completed':'Đã diễn ra');const img=e.image?`<img class="event-img" src="${escapeHtml(e.image)}" alt="${escapeHtml(currentLang()==='en'?e.enTitle:e.viTitle)}" loading="lazy">`:'';return `<article class="event-card">${img}<div class="datebox"><div class="day">${day}</div><div class="month">${escapeHtml(month)}</div></div><span class="tag">${escapeHtml(e.status)}</span><h3>${escapeHtml(currentLang()==='en'?e.enTitle:e.viTitle)}</h3><p>${escapeHtml(currentLang()==='en'?e.enDesc:e.viDesc)}</p><div class="event-meta">🕒 ${escapeHtml(e.time)}<br>📍 ${escapeHtml(currentLang()==='en'?(e.enLocation||e.location):e.location)}</div><button class="btn small" onclick='rsvp(${JSON.stringify(e.date)})'>RSVP</button><div class="countdown">${escapeHtml(cd)}</div></article>`}).join(''):`<div class="empty">${currentLang()==='en'?'No events in this category.':'Chưa có sự kiện trong nhóm này.'}</div>`}
 function renderStories(){document.getElementById('storiesGrid').innerHTML=DATA.stories.map((s,i)=>{const cover=s.image?`<div class="story-cover"><img src="${escapeHtml(s.image)}" alt="${escapeHtml(currentLang()==='en'?s.enTitle:s.viTitle)}" loading="lazy"><span>${escapeHtml(s.tag)}</span></div>`:`<div class="story-cover"><span>${escapeHtml(s.tag)}</span></div>`;return `<article class="story-card">${cover}<h3>${escapeHtml(currentLang()==='en'?s.enTitle:s.viTitle)}</h3><p>${escapeHtml(currentLang()==='en'?s.enExcerpt:s.viExcerpt)}</p><button class="btn small read" onclick="openStory(${i})">${currentLang()==='en'?'Read more':'Đọc thêm'}</button></article>`}).join('')}
 function renderGallery(){const el=document.getElementById('galleryGrid');if(!el)return;el.innerHTML=(DATA.photos||[]).map(p=>`<figure class="photo-card"><img src="${escapeHtml(p.image)}" alt="${escapeHtml(currentLang()==='en'?p.en:p.vi)}" loading="lazy"><figcaption class="photo-cap"><div class="event">${escapeHtml(p.event)}</div><p>${escapeHtml(currentLang()==='en'?p.en:p.vi)}</p></figcaption></figure>`).join('')}
 function renderBenefits(){document.getElementById('benefitsGrid').innerHTML=DATA.benefits.map(b=>`<article class="benefit-card"><span class="tag">Benefit</span><h3>${escapeHtml(currentLang()==='en'?b.enTitle:b.viTitle)}</h3><p>${escapeHtml(currentLang()==='en'?b.en:b.vi)}</p></article>`).join('')}
