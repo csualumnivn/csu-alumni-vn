@@ -59,25 +59,14 @@ export async function onRequestPost(context) {
 
     // --- Auto-reply email to submitter ---
     const autoReplyBody = [
-      `Kính gửi ${name},`,
-      '',
-      'Cảm ơn bạn đã gửi thông tin đến CSU Alumni VN!',
-      '',
-      'Chúng tôi đã nhận được hồ sơ của bạn và sẽ xem xét, liên hệ với bạn trong thời gian sớm nhất.',
-      '',
-      'Trong thời gian chờ đợi, hãy theo dõi các hoạt động của cộng đồng tại:',
-      'https://csu-alumni-vn.pages.dev',
-      '',
-      '---',
-      '',
       `Dear ${name},`,
       '',
       'Thank you for submitting your information to CSU Alumni VN!',
       '',
-      'We have received your profile and will review it and be in touch with you as soon as possible.',
+      'We have received your profile and will review it. Our team will be in touch with you as soon as possible.',
       '',
-      'In the meantime, stay connected with our community at:',
-      'https://csu-alumni-vn.pages.dev',
+      'In the meantime, stay connected with our community and follow our latest activities at:',
+      'https://csualumnivn.org/',
       '',
       'Warm regards,',
       'CSU Alumni VN Community',
@@ -88,7 +77,7 @@ export async function onRequestPost(context) {
       from:     'CSU Alumni VN <onboarding@resend.dev>',
       to:       [email],
       reply_to: 'csualumnivn@gmail.com',
-      subject:  'Cảm ơn bạn đã gửi thông tin / Thank you for your submission — CSU Alumni VN',
+      subject:  'Thank you for your submission — CSU Alumni VN',
       text:     autoReplyBody,
     };
 
