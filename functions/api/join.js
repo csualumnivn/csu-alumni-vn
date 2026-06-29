@@ -39,7 +39,7 @@ export async function onRequestPost(context) {
     ].join('\n');
 
     const adminPayload = {
-      from:     'CSU Alumni VN <onboarding@resend.dev>',
+      from:     'CSU Alumni VN <noreply@csualumnivn.org>',
       to:       ['csualumnivn@gmail.com'],
       reply_to: email || undefined,
       subject:  `New profile submission — ${name}`,
@@ -74,7 +74,7 @@ export async function onRequestPost(context) {
     ].join('\n');
 
     const autoReplyPayload = {
-      from:     'CSU Alumni VN <onboarding@resend.dev>',
+      from:     'CSU Alumni VN <noreply@csualumnivn.org>',
       to:       [email],
       reply_to: 'csualumnivn@gmail.com',
       subject:  'Thank you for your submission — CSU Alumni VN',
