@@ -1,3 +1,5 @@
+const RESEND = 'https://api.resend.com/emails';
+
 export async function onRequestPost(context) {
   const { request, env } = context;
 
@@ -17,30 +19,31 @@ export async function onRequestPost(context) {
     const message  = formData.get('message')  || '';
     const photo    = formData.get('photo');
 
-    const bodyText = [
+    // --- Admin notification email ---
+    const adminBody = [
       'Dear CSU Alumni VN,',
       '',
       'A new member has submitted their profile information via the website.',
       '',
-      `Full name:              ${name}`,
-      `Email:                  ${email}`,
-      `Program:                ${program}`,
-      `Cohort / Graduation:    ${cohort}`,
-      `Purpose:                ${intent}`,
-      `LinkedIn / Website:     ${linkedin}`,
-      `Bio:                    ${bio}`,
-      `Message:                ${message}`,
+      `Full name:           ${name}`,
+      `Email:               ${email}`,
+      `Program:             ${program}`,
+      `Cohort / Graduation: ${cohort}`,
+      `Purpose:             ${intent}`,
+      `LinkedIn / Website:  ${linkedin}`,
+      `Bio:                 ${bio}`,
+      `Message:             ${message}`,
       '',
       'Best regards,',
       'CSU Alumni VN Website',
     ].join('\n');
 
-    const payload = {
+    const adminPayload = {
       from:     'CSU Alumni VN <onboarding@resend.dev>',
       to:       ['csualumnivn@gmail.com'],
       reply_to: email || undefined,
       subject:  `New profile submission — ${name}`,
-      text:     bodyText,
+      text:     adminBody,
     };
 
     if (photo && photo.size > 0 && photo.size <= 2 * 1024 * 1024) {
@@ -51,17 +54,53 @@ export async function onRequestPost(context) {
       for (let i = 0; i < bytes.length; i += chunk) {
         binary += String.fromCharCode(...bytes.subarray(i, i + chunk));
       }
-      payload.attachments = [{ filename: photo.name, content: btoa(binary) }];
+      adminPayload.attachments = [{ filename: photo.name, content: btoa(binary) }];
     }
 
-    const res  = await fetch('https://api.resend.com/emails', {
-      method:  'POST',
-      headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-      body:    JSON.stringify(payload),
-    });
+    // --- Auto-reply email to submitter ---
+    const autoReplyBody = [
+      `Kính gửi ${name},`,
+      '',
+      'Cảm ơn bạn đã gửi thông tin đến CSU Alumni VN!',
+      '',
+      'Chúng tôi đã nhận được hồ sơ của bạn và sẽ xem xét, liên hệ với bạn trong thời gian sớm nhất.',
+      '',
+      'Trong thời gian chờ đợi, hãy theo dõi các hoạt động của cộng đồng tại:',
+      'https://csu-alumni-vn.pages.dev',
+      '',
+      '---',
+      '',
+      `Dear ${name},`,
+      '',
+      'Thank you for submitting your information to CSU Alumni VN!',
+      '',
+      'We have received your profile and will review it and be in touch with you as soon as possible.',
+      '',
+      'In the meantime, stay connected with our community at:',
+      'https://csu-alumni-vn.pages.dev',
+      '',
+      'Warm regards,',
+      'CSU Alumni VN Community',
+      'csualumnivn@gmail.com',
+    ].join('\n');
 
-    if (!res.ok) {
-      const err = await res.text();
+    const autoReplyPayload = {
+      from:     'CSU Alumni VN <onboarding@resend.dev>',
+      to:       [email],
+      reply_to: 'csualumnivn@gmail.com',
+      subject:  'Cảm ơn bạn đã gửi thông tin / Thank you for your submission — CSU Alumni VN',
+      text:     autoReplyBody,
+    };
+
+    // Send both emails in parallel
+    const headers = { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' };
+    const [adminRes, replyRes] = await Promise.all([
+      fetch(RESEND, { method: 'POST', headers, body: JSON.stringify(adminPayload) }),
+      email ? fetch(RESEND, { method: 'POST', headers, body: JSON.stringify(autoReplyPayload) }) : Promise.resolve({ ok: true }),
+    ]);
+
+    if (!adminRes.ok) {
+      const err = await adminRes.text();
       return json({ ok: false, error: err }, 500);
     }
 
