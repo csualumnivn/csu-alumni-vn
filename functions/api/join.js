@@ -58,19 +58,26 @@ export async function onRequestPost(context) {
     }
 
     // --- Auto-reply email to submitter ---
+    const hasPhoto = photo && photo.size > 0 && photo.size <= 2 * 1024 * 1024;
+    const receivedLine = hasPhoto
+      ? 'We have received your profile and will review it.'
+      : 'We have received your information and will review it.';
+
     const autoReplyBody = [
       `Dear ${name},`,
       '',
-      'Thank you for submitting your information to CSU Alumni VN!',
+      'Thank you for submitting your information to CSU Alumni VN - The power of networking!',
       '',
-      'We have received your profile and will review it. Our team will be in touch with you as soon as possible.',
+      `${receivedLine} Our team will be in touch with you as soon as possible.`,
       '',
       'In the meantime, stay connected with our community and follow our latest activities at:',
       'https://csualumnivn.org/',
       '',
-      'Warm regards,',
-      'CSU Alumni VN Community',
-      'csualumnivn@gmail.com',
+      'For and on behalf of CSU Alumni VN - The power of networking',
+      '',
+      'Yours sincerely,',
+      '',
+      'Nguyen Ngoc Trang (Thai Hai Ly)',
     ].join('\n');
 
     const autoReplyPayload = {
